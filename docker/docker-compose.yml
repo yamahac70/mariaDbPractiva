@@ -1,0 +1,11 @@
+services:
+  bancoMariaDb:
+    image: mariadb
+    restart: always
+    container_name: bancoMariaDb
+    ports:
+      - "3307:3306"
+    volumes:
+      - .:/code
+    env_file:
+      - .env
