@@ -12,7 +12,7 @@ export async function crearTare(req,res) {
             
             const tarea=await Tarea.agregarTarea({titulo,nota,done:completada,idUsuario:req.data.id})
 
-            res.json({tarea})
+            res.status(201).json({tarea})
     } catch (error) {
         res.status(500).json({error:error.message})
     }   
