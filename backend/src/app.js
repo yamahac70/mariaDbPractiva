@@ -5,5 +5,5 @@ const express=new Express(3002)
 
 express.midelwarePre()
 express.aniadirRutas("/api",Rutas)
-
+express.midelwarePost()
 express.servidor()

@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import { errorHandler } from '../middlewares/errores.middleware.js'
 
 export default class Express {
     app
@@ -18,6 +19,15 @@ export default class Express {
     }
     aniadirRutas(path,ruta){
         this.app.use(path,ruta)
+    }
+    midelwarePost(){
+        this.app.use((req, res, next) => {
+            res.status(404).json({
+                status: 'error',
+                message: 'Ruta no encontrada'
+            })
+        })
+        this.app.use(errorHandler)
     }
     servidor(){
         this.app.listen(this.puerto,()=>{

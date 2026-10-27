@@ -1,13 +1,34 @@
-import {jwtDescifrar} from '../services/jwt.service.js'
+import { jwtDescifrar } from '../services/jwt.service.js';
 
 export const authMiddleware = async (req, res, next) => {
     try {
-        const token = req.headers.authorization.split(' ')[1];
+        const authHeader = req.headers.authorization;
+
+        
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Token no proporcionado o formato inválido'
+            });
+        }
+
+        const token = authHeader.split(' ')[1];
         const data = jwtDescifrar(token);
+
+        if (!data) {
+            return res.status(401).json({
+                status: 'error',
+                message: 'Token inválido o expirado'
+            });
+        }
+
         req.data = data.data;
         next();
     } catch (error) {
-        console.log(error);
-        res.status(401).send('No autorizado');
+        
+        return res.status(401).json({
+            status: 'error',
+            message: 'No autorizado'
+        });
     }
-}
+};
