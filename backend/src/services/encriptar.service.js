@@ -6,7 +6,7 @@ export class EncriptacionService {
     
     // Recibe la contraseña en texto plano y devuelve el hash
     static async hashPassword(contrasenia) {
-        return await bcrypt.hash(contrasenia, SALT_ROUNDS);
+        return await bcrypt.hash(contrasenia, Number(SALT_ROUNDS));
     }
 
     // Compara la contraseña en texto plano con el hash guardado en la BD

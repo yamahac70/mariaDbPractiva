@@ -29,7 +29,7 @@ export default class Tarea{
     }
     static async traerTarea(id,idUsuario,data={select:dataTareas}){
         const {select}=data
-        const [tarea]=await pool.query(`SELECT ${select.join(",")} FROM Tarea WHERE Tarea.id=? AND Tarea.idUsuario=? `,id,idUsuario)
+        const [tarea]=await pool.query(`SELECT ${select.join(",")} FROM Tarea WHERE Tarea.id=? AND Tarea.idUsuario=? `,[id,idUsuario])
         return tarea
     }
     static async traerTareasyUsuario(idUsuario,data={selectTarea:dataTareas,selectUsuario:dataUsuarios}){
@@ -46,11 +46,11 @@ export default class Tarea{
         return tareas
     }
     static async agregarTarea (tarea){
-        const [result]=await pool.query('INSERT INTO Tarea SET ?',tarea)
+        const [result]=await pool.query('INSERT INTO Tarea SET ?',[tarea])
         return result
     }
     static async completarTarea(id){
-        const [result]=await pool.query('UPDATE Tarea SET done=1 WHERE id=?',id)
+        const [result]=await pool.query('UPDATE Tarea SET done=1 WHERE id=?',[id])
         return result
     }
     /* 
@@ -58,9 +58,15 @@ export default class Tarea{
     *@param id
     *@param tarea {titulo,descripcion}
     1*/
-    static async actualizarTarea (id,tarea){
-        const [result]=await pool.query('UPDATE Tarea SET ? WHERE id=?',[tarea,id])
+    static async actualizarTarea(id, { titulo, descripcion }) {
+  const [result] = await pool.query(
+    "UPDATE Tarea SET titulo = ?, descripcion = ? WHERE id = ?",
+    [titulo, descripcion, id]
+  );
+  return result;
+}
+    static async borrarTarea(id){
+        const [result]=await pool.query('DELETE FROM Tarea WHERE id=?',[id])
         return result
     }
-    
 }

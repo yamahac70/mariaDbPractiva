@@ -5,12 +5,13 @@ export async function crearTare(req,res) {
             if (!req.data.id) {
                 throw new Error('No autorizado');
             }
-            const {titulo,nota,completada}=req.body
-            if (!titulo || !nota) {
+            console.log(req.body)
+            const {titulo,descripcion}=req.body
+            if (!titulo || !descripcion) {
                 throw new Error('Faltan campos')
             }
             
-            const tarea=await Tarea.agregarTarea({titulo,nota,done:completada,idUsuario:req.data.id})
+            const tarea=await Tarea.agregarTarea({titulo,descripcion,idUsuario:req.data.id})
 
             res.status(201).json({tarea})
     } catch (error) {
@@ -54,7 +55,7 @@ export async function completarTarea(req,res){
         if (!req.params.id) {
             throw new Error('Faltan campos')
         }
-        const tarea=await Tarea.traerTarea(req.params.id,req.data.id,{select:["id"]})
+        const [tarea]=await Tarea.traerTarea(req.params.id,req.data.id,{select:["id"]})
         if (!tarea) {
             throw new Error('Tarea no encontrada o no pertenece al usuario')
         }
@@ -74,17 +75,36 @@ export async function editarTarea(req,res){
         if (!req.params.id) {
             throw new Error('Faltan campos')
         }
-        const {titulo,nota,completada}=req.body
-        if (!titulo || !nota) {
+        const {titulo,descripcion,completada}=req.body
+        if (!titulo || !descripcion) {
+            throw new Error('Faltan campos')
+        }
+        const [tarea]=await Tarea.traerTarea(req.params.id,req.data.id,{select:["id"]})
+        if (!tarea) {
+            throw new Error('Tarea no encontrada o no pertenece al usuario')
+        }
+        console.log(titulo,descripcion)
+        await Tarea.actualizarTarea(tarea.id,{titulo,descripcion})
+        res.json({tarea})
+    } catch (error) {
+        res.status(500).json({error:error.message})
+    }
+}
+export async function borrarTarea(req,res){
+    try {
+        if (!req.data.id) {
+            throw new Error('No autorizado');
+        }
+        if (!req.params.id) {
             throw new Error('Faltan campos')
         }
         const tarea=await Tarea.traerTarea(req.params.id,req.data.id,{select:["id"]})
         if (!tarea) {
             throw new Error('Tarea no encontrada o no pertenece al usuario')
         }
-        await Tarea.actualizarTarea(tarea.id,{titulo,nota})
+        await Tarea.borrarTarea(tarea.id)
         res.json({tarea})
     } catch (error) {
-        
+        res.status(500).json({error:error.message})
     }
 }

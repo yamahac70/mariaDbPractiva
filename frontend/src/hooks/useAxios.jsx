@@ -1,11 +1,18 @@
 import { api } from "../services/api.service";
-import { useCallback, useState } from "react";
-
-function useAxios() {
+import { useCallback, useState, useEffect, use } from "react";
+import { borrarStorage } from "../services/sessionStorage.service";
+import { useNavigate } from "react-router-dom";
+function useAxios(url) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate();
+ const cerrarSesion = () => {
+    borrarStorage("token");
+    borrarStorage("usuario");
+    navigate("/login", { replace: true });
+  };
   const ejecutarPeticion = useCallback(async (peticion) => {
     setLoading(true);
     setError(null);
@@ -20,6 +27,9 @@ function useAxios() {
         setError(response.data.error);
       } else if (response?.data?.message || response?.data?.mensaje) {//si es un error del servidor
         setError(response.data.message || response.data.mensaje);
+      }else if (response?.status === 401) { //si es un error de autorizacion
+        cerrarSesion();
+
       } else {
         // Si no hay respuesta del servidor (ej. servidor caído o error de red)
         setError(error.message);
@@ -29,6 +39,13 @@ function useAxios() {
     } finally {
       setLoading(false);
     }
+  }, []);
+  useEffect(() => {
+    if (!url) return;
+    ejecutarPeticion(url);
+
+
+    
   }, []);
 
   return [data, loading, error, ejecutarPeticion];

@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { errorHandler } from '../middlewares/errores.middleware.js'
+import { errorHandler } from '../middleware/errores.middleware.js'
 
 export default class Express {
     app

@@ -5,8 +5,8 @@ import { jwtCrear } from "../services/jwt.service.js";
 
 export async function registrar(req, res){
     try {
-        const { correo, contrasenia } = req.body;
-        if (!correo || !contrasenia) {
+        const { correo, contrasenia,nombre } = req.body;
+        if (!correo || !contrasenia || !nombre) {
             throw new Error('Faltan campos obligatorios (correo o contraseña)');
         }
         const usuarioExistente = await Usuarios.traerUsuarioCorreo(correo);
@@ -15,6 +15,7 @@ export async function registrar(req, res){
         }
         const contraseniaHasheada = await EncriptacionService.hashPassword(contrasenia);
         const nuevoUsuario = {
+            nombre,
             correo,
             contrasenia: contraseniaHasheada,
         };
