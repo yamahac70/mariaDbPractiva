@@ -207,3 +207,17 @@ El script `seed.js` crea los siguientes usuarios de prueba:
 - [ ] Implementar registro de usuarios (`POST /api/usuarios`).
 - [ ] Desarrollar la interfaz gráfica en la carpeta `frontend/` (React / Tailwind / Axios).
 - [ ] Manejo unificado de errores y validación de esquemas (por ej. con Zod).
+
+## Uso de git 
+```bash
+#para subir cambios
+git push -u "rama"
+#si en el proyecto podemos usar 
+git config --global push.autoSetupRemote true #esto para que suba todas las ramas
+#para merge 
+git merge rama-de-la-cual-tomar
+
+
+```
+
+
