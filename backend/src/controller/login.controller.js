@@ -4,7 +4,7 @@ import {jwtCrear} from '../services/jwt.service.js'
 
 export async function login(req,res){
     try {
-        console.log(req.body)
+        
         const {correo,contrasenia}=req.body
         if (!correo || !contrasenia) {
             throw new Error('Faltan campos')
@@ -18,7 +18,8 @@ export async function login(req,res){
             throw new Error('error contraseña o correo incorrectos')
         }
         const token=jwtCrear({id:usuario[0].id,correo:usuario[0].correo})
-        res.json({usuario:"ok",token})
+
+        res.json({usuario:usuario[0].nombre,token})
         
     } catch (error) {
         console.log(error)
