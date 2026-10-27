@@ -1,17 +1,29 @@
 import React from 'react'
 import useAxios from '../hooks/useAxios'
+import {guardarStorage}from '../services/sessionStorage.service.js'
+import { useNavigate } from 'react-router-dom';
 function Login() {
-
+  const navigate = useNavigate();
   const [respuesta, loading, error, ejecutarPeticion] = useAxios();
     async function submit(e){
+      try {
+        
+        
         e.preventDefault()
         const data = Object.fromEntries(new FormData(e.target))
         console.log(data)
-
-        await ejecutarPeticion({url:"/login",data})
-
-        console.log(respuesta)
+        
+       const res= await ejecutarPeticion({url:"/login",data,method:"POST"})
+       if (res){
+          console.log(res)
+         guardarStorage('token',res.token)
+         guardarStorage('usuario',res.usuario)
+         navigate("/tareas", { replace: true });
+        }
         console.log(error)
+      } catch (error) {
+        console.log(error)
+      }
 
     }  
 
@@ -34,9 +46,9 @@ function Login() {
           <fieldset className="fieldset">
             
           <label className="label">Email</label>
-          <input type="email" className="input" name="email" placeholder="Email" />
+          <input type="email" className="input" name="correo" placeholder="Email" />
           <label className="label">Password</label>
-          <input type="password" className="input" name="password" placeholder="Password" />
+          <input type="password" className="input" name="contrasenia" placeholder="Password" />
           <div><a className="link link-hover">Forgot password?</a></div>
 
           <button className="btn btn-neutral mt-4" disabled={loading}>Login</button>
